@@ -15,6 +15,8 @@ class ComplainListCreateView(generics.ListCreateAPIView):
     parser_classes = [MultiPartParser, FormParser] 
     
     def get_queryset(self):
+        if self.request.user.user_type == 'staff':
+            return Complain.objects.all()  
         return Complain.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
@@ -25,6 +27,8 @@ class ComplainDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrStaff]
 
     def get_queryset(self):
+        if self.request.user.user_type == 'staff':
+            return Complain.objects.all()
         return Complain.objects.filter(user=self.request.user)
 
 class ReplyCreateView(generics.CreateAPIView):
