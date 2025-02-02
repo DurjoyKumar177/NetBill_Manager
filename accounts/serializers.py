@@ -39,7 +39,7 @@ class CustomUserRegisterSerializer(serializers.ModelSerializer):
             customer_id=validated_data['customer_id'],
             password=validated_data['password'],
             location=validated_data.get('location', ''),  # Handle optional location
-            is_active=False  # User is inactive until admin approval
+            is_active=False  
         )
 
         if profile_pic:
@@ -76,7 +76,7 @@ class CustomUserProfileUpdateSerializer(serializers.ModelSerializer):
         return data
 
     def update(self, instance, validated_data):
-        # Update only the fields that are provided in the request
+        
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()

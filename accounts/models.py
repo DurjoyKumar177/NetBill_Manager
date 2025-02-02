@@ -10,11 +10,11 @@ class CustomUser(AbstractUser):
 
     user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES, default='user')
     phone_number = models.CharField(max_length=15, unique=True, blank=True, null=True)
-    isp_username = models.CharField(max_length=100, unique=True, blank=True, null=True)  # Allow blank for staff
-    customer_id = models.CharField(max_length=50, unique=True, null=True, blank=True)  # Required only for users
-    is_active = models.BooleanField(default=False)  # Account activation by admin
-    location = models.CharField(max_length=255, blank=True, null=True)  # New field for user location
-    profile_pic = models.ImageField(upload_to="accounts/profile_pics/", blank=True, null=True)  # New profile picture field
+    isp_username = models.CharField(max_length=100, unique=True, blank=True, null=True)  
+    customer_id = models.CharField(max_length=50, unique=True, null=True, blank=True)  
+    is_active = models.BooleanField(default=False) 
+    location = models.CharField(max_length=255, blank=True, null=True) 
+    profile_pic = models.ImageField(upload_to="accounts/profile_pics/", blank=True, null=True)  
 
     def save(self, *args, **kwargs):
         if self.user_type == 'staff':
