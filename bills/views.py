@@ -9,7 +9,7 @@ from django.conf import settings
 from django.urls import reverse
 from decimal import Decimal
 import uuid
-from sslcommerz_python.payment import SSLCSession
+# from sslcommerz_python.payment import SSLCSession
 from sslcommerz_lib import SSLCOMMERZ
 from rest_framework import generics, permissions
 
