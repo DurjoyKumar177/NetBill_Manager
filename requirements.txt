@@ -36,6 +36,8 @@ requests==2.32.3
 setuptools==73.0.1
 sqlparse==0.5.1
 sslcommerz==0.1
+sslcommerz-lib==1.0
+sslcommerz-python==0.0.7
 typing_extensions==4.12.2
 tzdata==2024.1
 urllib3==2.3.0
