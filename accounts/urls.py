@@ -1,6 +1,6 @@
 from django.urls import path, include
 from dj_rest_auth.views import LoginView, LogoutView
-from .views import RegisterUserView, UpdateProfileView
+from .views import RegisterUserView, UpdateProfileView, UserTypeView
 from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
@@ -11,5 +11,6 @@ urlpatterns = [
     path('auth/token/login/', LoginView.as_view(), name='token_login'),  # Login with Token
     path('auth/token/logout/', LogoutView.as_view(), name='token_logout'),
     path('api/token-auth/', obtain_auth_token, name='api_token_auth'),  # Get Token after login
+    path('user-type/', UserTypeView.as_view(), name='user_type'),
 ]
 
