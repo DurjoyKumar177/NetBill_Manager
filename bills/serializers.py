@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Bill, PaymentHistory, CollectionHistory
 from django.contrib.auth import get_user_model
 from rest_framework.exceptions import ValidationError, NotFound
+from accounts.models import CustomUser
 
 User = get_user_model()
 
@@ -64,64 +65,60 @@ class PaymentHistorySerializer(serializers.ModelSerializer):
         return payment
 
     
+class UserDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'username', 'location']  # Include the fields you need (username, location)
+
 class CollectionHistorySerializer(serializers.ModelSerializer):
-    customer_id = serializers.CharField(write_only=True)  # Add customer_id field
-    month = serializers.CharField(write_only=True)  # Add month field
+    customer_id = serializers.CharField(write_only=True)
+    month = serializers.CharField(write_only=True)  # Keep it writable for creation
+    user = UserDetailSerializer(read_only=True)  # Show user details in response
+    month = serializers.SerializerMethodField()  # Add month as a read-only field
 
     class Meta:
         model = CollectionHistory
-        fields = ['id', 'staff', 'user', 'bill','month', 'amount', 'collection_date', 'customer_id']
+        fields = ['id', 'staff', 'user', 'bill', 'month', 'amount', 'collection_date', 'customer_id']
         read_only_fields = ['staff', 'user', 'bill', 'collection_date']
 
-    def create(self, validated_data):
-        customer_id = validated_data.pop('customer_id')  # Remove from validated_data
-        month = validated_data.pop('month')  # Remove from validated_data
+    def get_month(self, obj):
+        """Retrieve month from the related Bill model"""
+        return obj.bill.month if obj.bill else None
 
-        # Fetch the user based on customer_id
+    def create(self, validated_data):
+        customer_id = validated_data.pop('customer_id')
+        month = validated_data.pop('month')
+
         try:
-            user = User.objects.get(customer_id=customer_id)
-        except User.DoesNotExist:
+            user = CustomUser.objects.get(customer_id=customer_id)
+        except CustomUser.DoesNotExist:
             raise serializers.ValidationError("User with this customer ID does not exist.")
 
-        # Check if the user has already paid for this month
         if PaymentHistory.objects.filter(user=user, bill__month=month).exists():
             raise serializers.ValidationError("Payment for this user and month already exists.")
 
-        # Get or create the bill
         bill, created = Bill.objects.get_or_create(
             user=user,
             month=month,
             defaults={'amount': validated_data.get('amount', 0)}
         )
 
-        # Add user and bill to validated_data
         validated_data['user'] = user
         validated_data['bill'] = bill
 
-        return super().create(validated_data)  # Create CollectionHistory
-
-    customer_id = serializers.CharField(write_only=True)  # Add customer_id field
-    month = serializers.CharField(write_only=True)  # Add month field
-
-    class Meta:
-        model = CollectionHistory
-        fields = ['id', 'staff', 'user', 'bill', 'amount', 'collection_date', 'customer_id', 'month']
-        read_only_fields = ['staff', 'user', 'bill', 'collection_date']
+        return super().create(validated_data)
 
     def validate(self, data):
         customer_id = data.get('customer_id')
         month = data.get('month')
 
-        # Fetch the user based on customer_id
         try:
-            user = User.objects.get(customer_id=customer_id)
-        except User.DoesNotExist:
+            user = CustomUser.objects.get(customer_id=customer_id)
+        except CustomUser.DoesNotExist:
             raise serializers.ValidationError("User with this customer ID does not exist.")
 
-        # Check if the user has already paid for this month
         if PaymentHistory.objects.filter(user=user, bill__month=month).exists():
             raise serializers.ValidationError("Payment for this user and month already exists.")
 
-        # Add user to the validated data
         data['user'] = user
         return data
