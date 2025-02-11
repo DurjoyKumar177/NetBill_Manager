@@ -1,4 +1,4 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_migrate
 from django.dispatch import receiver
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
@@ -6,6 +6,8 @@ from django.conf import settings
 from .models import CustomUser
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
+from .models import Device
+
 
 User = get_user_model()
 
@@ -26,3 +28,17 @@ def send_activation_email(sender, instance, created, **kwargs):
         email = EmailMultiAlternatives(email_subject, '', settings.EMAIL_HOST_USER, [instance.email])
         email.attach_alternative(email_body, 'text/html')
         email.send()
+
+@receiver(post_migrate)
+def populate_devices(sender, **kwargs):
+    if sender.name == "accounts": 
+        device_choices = [
+            ('tv', 'TV'),
+            ('mobile', 'Mobile'),
+            ('computer', 'Computer'),
+            ('cctv', 'CCTV'),
+            ('others', 'Others'),
+        ]
+        for code, name in device_choices:
+            Device.objects.get_or_create(name=code)
+        

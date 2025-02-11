@@ -1,4 +1,4 @@
-from rest_framework import generics
+from rest_framework import generics, permissions
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import CustomUser
 from .serializers import CustomUserRegisterSerializer, CustomUserProfileUpdateSerializer
@@ -13,10 +13,10 @@ class RegisterUserView(generics.CreateAPIView):
 class UpdateProfileView(generics.RetrieveUpdateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserProfileUpdateSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
-        return self.request.user
+        return self.request.user  # Ensure users can only update their own profile
     
 class UserTypeView(APIView):
     permission_classes = [IsAuthenticated]
