@@ -70,9 +70,9 @@ class UserPackageInfo(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="package_info")
     customer_id = models.CharField(max_length=50, blank=True, null=True)  
     isp_username = models.CharField(max_length=100, blank=True, null=True)  
-    package_number = models.DecimalField(max_digits=1, decimal_places=0)
-    package_password = models.CharField(max_length=255)
-    monthly_payment = models.DecimalField(max_digits=10, decimal_places=2)
+    package_number = models.DecimalField(max_digits=1, decimal_places=0,blank=True, null=True)
+    package_password = models.CharField(max_length=255, blank=True, null=True)
+    monthly_payment = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     package_slip = models.FileField(upload_to="packages/slips/", blank=True, null=True)
 
     def __str__(self):
@@ -86,13 +86,18 @@ def create_related_user_info(sender, instance, created, **kwargs):
         AdditionalUserInfo.objects.create(user=instance, customer_id=instance.customer_id, isp_username=instance.isp_username)
         UserPackageInfo.objects.create(user=instance, customer_id=instance.customer_id, isp_username=instance.isp_username)
 
+
 @receiver(post_save, sender=CustomUser)
 def save_related_user_info(sender, instance, **kwargs):
     if instance.user_type == 'user':
-        instance.additional_info.customer_id = instance.customer_id
-        instance.additional_info.isp_username = instance.isp_username
-        instance.additional_info.save()
+        # Ensure AdditionalUserInfo exists before accessing it
+        additional_info, _ = AdditionalUserInfo.objects.get_or_create(user=instance)
+        additional_info.customer_id = instance.customer_id
+        additional_info.isp_username = instance.isp_username
+        additional_info.save()
 
-        instance.package_info.customer_id = instance.customer_id
-        instance.package_info.isp_username = instance.isp_username
-        instance.package_info.save()
+        # Ensure UserPackageInfo exists before accessing it
+        package_info, _ = UserPackageInfo.objects.get_or_create(user=instance)
+        package_info.customer_id = instance.customer_id
+        package_info.isp_username = instance.isp_username
+        package_info.save()

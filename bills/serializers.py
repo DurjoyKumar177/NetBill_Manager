@@ -13,8 +13,8 @@ class BillSerializer(serializers.ModelSerializer):
         read_only_fields = ['user', 'is_paid', 'created_at']
 
 class PaymentHistorySerializer(serializers.ModelSerializer):
-    bill = serializers.PrimaryKeyRelatedField(queryset=Bill.objects.filter(is_paid=False))  # Only unpaid bills
-    month = serializers.CharField(source='bill.month', read_only=True)  # Auto-filled from bill
+    bill = serializers.PrimaryKeyRelatedField(queryset=Bill.objects.filter(is_paid=False))  
+    month = serializers.CharField(source='bill.month', read_only=True)  
     amount = serializers.DecimalField(max_digits=10, decimal_places=2)
 
     class Meta:
@@ -28,8 +28,8 @@ class PaymentHistorySerializer(serializers.ModelSerializer):
         return value
 
     def create(self, validated_data):
-        user = self.context['request'].user  # Get logged-in user
-        bill = validated_data['bill']  # Selected unpaid bill
+        user = self.context['request'].user  
+        bill = validated_data['bill'] 
         amount = validated_data['amount']
         
         if bill.is_paid:
@@ -59,7 +59,7 @@ class PaymentHistorySerializer(serializers.ModelSerializer):
             user=user,
             bill=bill,
             amount=amount,
-            payment_method='online',  # Always set to 'online'
+            payment_method='online',  
         )
 
         return payment
@@ -68,26 +68,26 @@ class PaymentHistorySerializer(serializers.ModelSerializer):
 class UserDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'location']  # Include the fields you need (username, location)
+        fields = ['id', 'username', 'location']  
 
 class CollectionHistorySerializer(serializers.ModelSerializer):
     customer_id = serializers.CharField(write_only=True)
-    month = serializers.CharField(write_only=True)  # Keep it writable for creation
-    user = UserDetailSerializer(read_only=True)  # Show user details in response
-    month = serializers.SerializerMethodField()  # Add month as a read-only field
+    month = serializers.CharField(write_only=True)  
+    display_month = serializers.SerializerMethodField()  
+    user = UserDetailSerializer(read_only=True)
 
     class Meta:
         model = CollectionHistory
-        fields = ['id', 'staff', 'user', 'bill', 'month', 'amount', 'collection_date', 'customer_id']
-        read_only_fields = ['staff', 'user', 'bill', 'collection_date']
+        fields = ['id', 'staff', 'user', 'bill', 'month', 'display_month', 'amount', 'collection_date', 'customer_id']
+        read_only_fields = ['staff', 'user', 'bill', 'collection_date', 'display_month']
 
-    def get_month(self, obj):
-        """Retrieve month from the related Bill model"""
+    def get_display_month(self, obj):
+        """Retrieve month from the related Bill model for output"""
         return obj.bill.month if obj.bill else None
 
     def create(self, validated_data):
         customer_id = validated_data.pop('customer_id')
-        month = validated_data.pop('month')
+        month = validated_data.pop('month')  
 
         try:
             user = CustomUser.objects.get(customer_id=customer_id)
