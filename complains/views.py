@@ -38,3 +38,11 @@ class ReplyCreateView(generics.CreateAPIView):
     
     def perform_create(self, serializer):
         serializer.save(staff=self.request.user)
+        
+class ReplyListView(generics.ListAPIView):
+    serializer_class = ReplySerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        complain_id = self.kwargs['complain_id']
+        return Reply.objects.filter(complain_id=complain_id)

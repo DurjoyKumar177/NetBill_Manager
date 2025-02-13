@@ -26,6 +26,8 @@ urlpatterns = [
     path('api/complains/', include('complains.urls')),  # Complains API
     path('api-auth/', include('rest_framework.urls')),  # DRF default authentication
     path('api/bills/', include('bills.urls')),  # Bills API
+    path('api/contact/', include('contact_us.urls')),  # Contact_us API
+    
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

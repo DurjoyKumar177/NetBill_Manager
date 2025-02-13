@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'bills',
     'complains',
     'announcement',
+    'contact_us',
 ]
 
 SITE_ID = 1 
@@ -185,3 +186,4 @@ SSL_COMMERZ_STORE_PASSWORD = env("Store_Password")
 SSL_COMMERZ_IS_TEST_MODE = True  
 
 SITE_URL = "http://127.0.0.1:8000"
+FRONTEND_URL= "http://localhost:5173"

@@ -71,7 +71,7 @@ class PaymentCreateView(generics.CreateAPIView):
             'product_name': "Internet Bill Payment",
             'product_category': "Utility Bill",
             'product_profile': "general",
-            'value_a': str(bill.id)  # Pass bill ID as a custom field
+            'value_a': str(bill.id)  
         }
 
         # Create SSLCOMMERZ session
@@ -123,19 +123,19 @@ class SSLCOMMERZSuccessView(APIView):
             bill.is_paid = True
             bill.save()
 
-            return Response({"message": "Payment successful!"})
+            return Response(status=status.HTTP_302_FOUND, headers={"Location": f"{settings.FRONTEND_URL}/payment-success"})
         except Bill.DoesNotExist:
             return Response({"error": "Bill not found"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
 class SSLCOMMERZFailView(APIView):
-    def get(self, request, *args, **kwargs):
-        return Response({"message": "Payment failed!"})
+    def post(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_302_FOUND, headers={"Location": f"{settings.FRONTEND_URL}/payment-failed"})
 
 class SSLCOMMERZCancelView(APIView):
-    def get(self, request, *args, **kwargs):
-        return Response({"message": "Payment cancelled!"})
+    def post(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_302_FOUND, headers={"Location": f"{settings.FRONTEND_URL}/payment-cancel"})
 
 class SSLCOMMERZIPNView(APIView):
     def post(self, request, *args, **kwargs):
