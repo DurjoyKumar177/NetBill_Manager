@@ -32,6 +32,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["127.0.0.1", "localhost", ".vercel.app"] 
 CSRF_TRUSTED_ORIGINS = [
+    'https://net-bill-manager.vercel.app',
     'https://netbill-manager.onrender.com',
     'https://*.127.0.0.1',
     'http://localhost:5173',

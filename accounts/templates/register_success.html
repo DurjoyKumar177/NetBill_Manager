@@ -1,9 +1,68 @@
+<!DOCTYPE html>
 <html>
 <head>
-    <title>Registration Successful</title>
+    <meta charset="UTF-8">
+    <title>Registration Successful - Confidence Cable Network</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .logo {
+            width: 120px; 
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover; 
+            margin-bottom: 15px;
+        }
+        h2 {
+            color: #2c3e50;
+        }
+        p {
+            font-size: 16px;
+            color: #555555;
+            line-height: 1.5;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            margin-top: 15px;
+            font-size: 16px;
+            color: #ffffff;
+            background-color: #3498db;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+        .button:hover {
+            background-color: #2980b9;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #888888;
+        }
+    </style>
 </head>
 <body>
-    <p>Dear {{ user.first_name }},</p>
-    <p>Your registration was successful. Please wait for admin approval before your account is activated.</p>
+    <div class="container">
+        <img src="https://drive.google.com/uc?id=1BjtEG9Pocmut0hxmPqtU4fHdU5li3Swe" alt="Confidence Cable Network Logo" class="logo">
+        <h2>🎉 Welcome to Confidence Cable Network!</h2>
+        <p>Dear <strong>{{ user.first_name }}</strong>,</p>
+        <p>Thank you for choosing <strong>Confidence Cable Network</strong>! Your registration has been successfully received.</p>
+        <p>Before you can start enjoying our services, your account needs to be activated by our admin team. We will notify you once your account is ready.</p>
+        <a href="https://net-bill-manager-frontend.vercel.app/home" class="button">Go to Home Page</a>
+        <p class="footer">If you have any questions, feel free to contact our support team at <br><strong>support@confidencecable.com</strong></p>
+    </div>
 </body>
 </html>
