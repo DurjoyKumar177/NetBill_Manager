@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-i(^%g@%t9)#cziy@*kgs=7*qw=3+8d$z_kau197ia2!c$!wlf_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost",".vercel.app"], 
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", ".vercel.app"] 
 CSRF_TRUSTED_ORIGINS = [
     'https://netbill-manager.onrender.com',
     'https://*.127.0.0.1',
