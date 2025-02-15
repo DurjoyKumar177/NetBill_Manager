@@ -30,13 +30,14 @@ SECRET_KEY = 'django-insecure-i(^%g@%t9)#cziy@*kgs=7*qw=3+8d$z_kau197ia2!c$!wlf_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost",".vercel.app"], 
 CSRF_TRUSTED_ORIGINS = [
     'https://netbill-manager.onrender.com',
     'https://*.127.0.0.1',
     'http://localhost:5173',
     'http://127.0.0.1:5173'
 ]
+
 
 # Application definition
 
@@ -101,7 +102,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'NetBill_Manager.wsgi.application'
+WSGI_APPLICATION = 'NetBill_Manager.wsgi.app'
 
 
 # Database
