@@ -210,5 +210,5 @@ SSL_COMMERZ_STORE_ID = env("Store_ID")
 SSL_COMMERZ_STORE_PASSWORD = env("Store_Password")
 SSL_COMMERZ_IS_TEST_MODE = True  
 
-SITE_URL = "http://127.0.0.1:8000"
-FRONTEND_URL= "http://localhost:5173"
+SITE_URL = "https://net-bill-manager.vercel.app"
+FRONTEND_URL= "https://net-bill-manager-frontend.vercel.app"
